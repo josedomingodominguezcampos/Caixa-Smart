@@ -1,0 +1,103 @@
+﻿
+.dpDiv {}
+.dpTable {
+    font-family: Arial;
+    font-size: 120%;
+    font-weight: normal;
+    color: black;
+    text-align: center;
+    color: #000;
+    background-color: #fff;
+    border: 1px solid #AAA;
+    box-shadow: 4px 4px 4px 0px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 4px 4px 4px 0px rgba(0,0,0,0.3);
+    -ms-box-shadow: 4px 4px 4px 0px rgba(0,0,0,0.3);
+    -o-box-shadow: 4px 4px 4px 0px rgba(0,0,0,0.3)
+}
+.dpTR { }
+.dpTitleTR { }
+.dpDayTR {}
+.dpTodayButtonTR {}
+.dpTD {
+    border: 1px solid #ffffff;
+    padding: 4px;
+}
+
+.dpDayHighlightTD {background-color:#FFFFFF;
+                   border:0px solid #AAAAAA;
+
+}
+
+.dpTDHover {
+    background-color: #A00;
+    border: 0px solid #888;
+    cursor: pointer;
+    color: white;
+    border-radius: 15px 15px 15px 15px;
+    -ms-border-radius: 15px 15px 15px 15px;
+    -moz-border-radius: 15px 15px 15px 15px;
+    -webkit-border-radius: 15px 15px 15px 15px;
+    -khtml-border-radius: 15px 15px 15px 15px
+}
+
+.dpTitleTD { }
+.dpButtonTD { }
+
+.dpTodayButtonTD {
+    font-family: Arial;
+    font-size: 70%;
+    font-weight: normal;
+}
+.dpDayTD {
+    background-color: #aaa;
+    border: 0px solid #AAA;
+    color: white;
+    font-size: 60%;
+    border-radius: 20px 20px 20px 20px;
+    -ms-border-radius: 20px 20px 20px 20px;
+    -moz-border-radius: 20px 20px 20px 20px;
+    -webkit-border-radius: 20px 20px 20px 20px;
+    -khtml-border-radius: 20px 20px 20px 20px;
+}
+
+.dpTitleText {
+    font-family: Arial;
+    font-size: 80%;
+    font-weight: bold;
+    color: Black;
+}
+
+.dpDayHighlight {
+    color: #f3840b;
+    font-weight: bold;
+    font-size: 130%;
+    border: solid 1px #aaa;
+    border-radius: 15px 15px 15px 15px;
+    -ms-border-radius: 15px 15px 15px 15px;
+    -moz-border-radius: 15px 15px 15px 15px;
+    -webkit-border-radius: 15px 15px 15px 15px;
+    -khtml-border-radius: 15px 15px 15px 15px
+}
+
+.dpButton {
+    font-family: Arial;
+    font-size: 100%;
+    font-weight: normal;
+    color: black;
+    background: #eee;
+
+}
+.dpTodayButton {
+    font-family: Arial;
+    font-size: 100%;
+    font-weight: normal;
+    color: Black;
+    background: #eee;
+    border: solid 1px #aaa;
+    cursor: pointer;
+    border-radius:         10px 10px 10px 10px;
+    -ms-border-radius:     10px 10px 10px 10px;
+    -moz-border-radius:    10px 10px 10px 10px;
+    -webkit-border-radius: 10px 10px 10px 10px
+    ;-khtml-border-radius:  10px 10px 10px 10px
+}

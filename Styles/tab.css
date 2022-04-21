@@ -1,0 +1,10 @@
+﻿
+
+.tab_box {border:0px solid #000000;background-color:#ffffff;padding:1px;}				
+.tab_area {border:0px solid #000000;background-color:#ffffff;padding:1px;}
+ul.tab_menu {margin:15px;padding:0px;margin-top:0px;	margin-bottom:6px; }
+ul.tab_menu li {display:inline;}
+ul.tab_menu li a {border:0px solid #000000;background-color:#eeeeee;color:#444400;padding:0px 5px 6px 5px;font-variant:small-caps;font-size:14px; font-weight:400;}
+ul.tab_menu li a:hover {background-color:#ff0000;color:#ffffff;}
+ul.tab_menu li a.active {background-color:#ffffff;color:#000000;border:1px solid #000000;	border-bottom: 1px solid #ffffff;}
+.tab_contenido {background-color:#ffffff;	padding:10px;	border:1px solid #000000;}

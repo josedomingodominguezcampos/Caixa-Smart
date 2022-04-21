@@ -1,0 +1,596 @@
+﻿<%@ Master Language="VB" AutoEventWireup="false" CodeBehind="VS.Master.vb" Inherits="THERION.Site" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxtool" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head runat="server">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|PT+Sans+Narrow|Roboto|Roboto+Condensed|Source+Sans+Pro|Nunito|Nunito+Sans" rel="stylesheet" />
+
+    <link rel="shortcut icon" href="img\logoico.png" type="image/icon" />
+    <link rel="icon" href="img\logoico.png" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" /> 
+
+    <title>TRIOHELP</title>
+
+    <script src="js/jquery-3.1.1.js"       type="text/javascript"></script>
+    <script src="js/jquery-ui.js"          type="text/javascript"></script>
+    <script src="js/Custom.js"             type="text/javascript"></script>
+
+    <!-- ************ -->
+    <!-- BPMN Zone    -->
+    <!-- ************ -->
+    
+    <script src="js/go-debug.js"           type="text/javascript"></script>
+    <script src="js/DrawCommandHandler.js" type="text/javascript"></script>
+    <script src="js/BPMNClasses.js"        type="text/javascript" ></script>
+    <script src="js/BPMN.js"               type="text/javascript"></script>
+
+    <!-- **************** -->
+    <!-- geocomplete zone -->
+    <!-- **************** -->
+
+    <script type="text/javascript" src="js/jquery.geocomplete.js"></script>
+    <script src="js/logger.js"     type="text/javascript"></script>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaMdzPDwbXiLVMzdGyKDGE668oxuvxKUo&libraries=places" type="text/javascript"></script>
+    <link   href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+
+
+    <!-- ************ -->
+    <!-- leaflet Zone -->  
+    <!-- ************ -->
+
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" /> -->
+    
+    <link rel="stylesheet" href="Styles/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.3/dist/esri-leaflet-geocoder.css" />
+
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/esri-leaflet@2.0.7"                type="text/javascript"></script>
+    <script src="https://unpkg.com/esri-leaflet-geocoder@2.2.3"       type="text/javascript"></script>
+
+    <!-- ************ -->
+    <!-- SPREAD       -->  
+    <!-- ************ -->
+
+    <link href="Styles/gc.spread.sheets.excel2013white.11.0.0.css" rel="stylesheet" type="text/css" />
+    <script src="Scripts/gc.spread.sheets.all.11.0.0.min.js" type="text/javascript"></script>
+      
+    <!-- ************ -->
+
+    <script type="text/javascript">
+
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.oRequestAnimationFrame;
+        
+        var dentro_menu_general = 'NO';
+        var dentro_de_edicion   = 'NO';
+        var gRAComputador;
+
+        var gRATemporizador;
+        var tiempo_computacion = 0;
+        var tiempo_reloj = 0;
+        var tiempo_panel_ficheros = 0;
+        var tiempo_posicion_capas = 0;
+        var tiempo_menu_general = 0;
+        var tiempo_refresco_individual = 0;
+        var tiempo_refresco_acciones = 0;
+		var tiempo_refresco_altas = 0;
+		var tiempo_autoarranques = 0;
+		var tiempo_exceldatos = 0;
+
+        // -------------------------------
+            function mostrarnavegador() {
+        // -------------------------------
+
+            var navegador = "Navegador Desconocido";
+            var posicion = 0;
+            
+            if (navigator.appName == 'Netscape') {
+                var ua = navigator.userAgent;
+                var re = new RegExp("Trident/.*rv:([0-9]{1,}[\.0-9]{0,})");
+                var rv = "";
+                if (re.exec(ua) != null)
+                    rv = parseFloat(RegExp.$1);
+                navegador = "Internet Explorer " + rv;
+            }
+            
+            var is_safari = navigator.userAgent.toLowerCase().indexOf("safari/") > -1;
+            var is_chrome = navigator.userAgent.toLowerCase().indexOf("chrome/") > -1;
+            var is_firefox = navigator.userAgent.toLowerCase().indexOf("firefox/") > -1;
+            var is_ie = navigator.userAgent.toLowerCase().indexOf("msie ") > -1;
+
+            if (is_safari && !is_chrome) {
+                posicion = navigator.userAgent.toLowerCase().indexOf("Version/");
+                var ver_safari = navigator.userAgent.toLowerCase().substring(posicion + 9, posicion + 12);
+                ver_safari = parseFloat(ver_safari);
+                navegador = "Safari (" + ver_safari + ")";
+            }
+
+            if (is_chrome) {
+                posicion = navigator.userAgent.toLowerCase().indexOf('chrome/');
+                var ver_chrome = navigator.userAgent.toLowerCase().substring(posicion + 7, posicion + 11);
+                ver_chrome = parseFloat(ver_chrome);
+                navegador = "Google Chrome (" + ver_chrome + ")";
+            }
+
+            if (is_firefox) {
+                posicion = navigator.userAgent.toLowerCase().lastIndexOf("firefox/");
+                var ver_firefox = navigator.userAgent.toLowerCase().substring(posicion + 8, posicion + 12);
+                ver_firefox = parseFloat(ver_firefox);
+                navegador = "Firefox (" + ver_firefox + ")";
+            }
+
+            if (is_ie) {
+                posicion = navigator.userAgent.toLowerCase().lastIndexOf("msie ");
+                var ver_ie = navigator.userAgent.toLowerCase().substring(posicion + 5, posicion + 8);
+                ver_ie = parseFloat(ver_ie);
+                navegador = "IE c(" + ver_ie + ")";
+            }
+
+            var nave = document.getElementById("navegador");
+            if (nave) { nave.innerHTML = navegador; }
+        }
+
+        // ------------------------------------------------------------
+        function ResizeMaster() {
+            try {
+
+                var dw = document.getElementById(div_wait);
+                if (dw) {
+                    dw.style.width = '100%';
+                    dw.style.height = '100%';
+                }
+                return true;
+            }
+            catch (e) {
+                alert('Error: ' + e.message);
+                return false;
+            }
+        }
+        // ---------------------------------------------------------
+
+        // ------------------------------------------------------------
+           function ir_a_aspx() { window.location.href = "menu.aspx";}
+        // ---------------------------------------------------------
+
+    </script>
+        
+    <link href="~/Styles/Site.css"    rel="stylesheet" type="text/css" />
+    <link href="~/Styles/img.css"     rel="stylesheet" type="text/css" />
+    <link href="~/Styles/tab.css"     rel="stylesheet" type="text/css" />
+    <link href="~/Styles/dpicker.css" rel="stylesheet" type="text/css" />
+
+    <style id="st1" type="text/css">
+        
+        html, body         {margin:0; padding:0; height:100%;}
+        .refresco_normal   {font-size:100%;color:#fff;font-weight:normal;}
+        .refresco_ocupado  {font-size:100%;color:#f0f;font-weight:normal;}
+        .divsombra         { -webkit-box-shadow: 0 10px 6px -6px #777777
+                            ;-moz-box-shadow   : 0 10px 6px -6px #777777
+                            ;box-shadow        : 0 10px 6px -6px #777777;}
+    </style>
+
+    <style id="style_mantenimiento_1" type="text/css">
+
+        .modalbackground  {background-color:Gray; opacity: 0.5; filter:Alpha(opacity=50);}
+        .modalpopup       {padding:6px 6px 6px 6px;}
+
+        .acceso      {border:solid #000 0px;padding:0px;margin:0px;}
+        .solapas     {border:solid #00f 0px;height:100%;width:100%;margin:0px;padding:0px;}
+        .tabbed_box  {border:dotted #ccc 0px;border-bottom-width:1px;margin:0px;padding:0px;width:100%;}
+        .tabbed_area {border:dotted #eee 0px;border-bottom-width:0px;margin:0px;padding:5px;width:100%;}
+        .capa        {display:none;border:1px solid #e00;margin:0px; padding:0px 0px 0px 0px;}
+
+        ul.tabs  {outline: 0;
+                  padding: 2px;
+                  display: inline;
+                  color: #9fa8b0;
+                  font-weight: normal;
+        }
+        
+        ul.tabs li             {display:inline;padding:2px; border:solid 0px #000;}
+        ul.tabs li:first-child {border-left-width:0px}
+        
+        ul.tabs li a           {cursor:pointer; color: #000}        
+        ul.tabs li a:hover     {color: #f00;}
+        ul.tabs li a.active    {color: #f00;}
+                              
+        .sublt  { font-size:100%; font-weight:normal; color:Black}
+        .prilt  { font-size:100%; font-weight:normal; color:Blue }
+        .bldato { border: 1px solid #dddddd; background-color: #eeeeee; color: #000000;}
+        
+        .FondoAplicacion { border: solid 0px #000  
+                          ;background-color: White
+                          ;opacity:0.1
+                          ;-moz-opacity: 0.1
+                          ;-khtml-opacity: 0.1
+                          ;-ms-filter: "alpha(opacity=10)"
+                          ;filter: alpha(opacity=10)
+                          ;filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=10)"
+                         }
+
+        .FondoSubeFicheros { border: solid 3px #000  
+                            ;opacity:1
+                            ;-moz-opacity: 1
+                            ;-khtml-opacity: 1
+                            ;-ms-filter: "alpha(opacity=100)"
+                            ;filter: alpha(opacity=100)
+                            ;filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"
+                            ;position:absolute
+                            ;left:1%
+                            ;top:5%
+                            ;background-color: #eef
+                            ;margin:auto
+                            ;padding:0px
+                            ;min-width:80%
+                            ;min-height:85%
+                            ;max-width:80%
+                            ;max-height:75%
+                            ;overflow:auto
+                            ;text-align:center                           
+                           }
+
+        .dragPanel { border: 1px solid #899
+                    ;color: #fff
+                    ;font-weight: normal
+                    ;padding: 0px
+                    ;margin : 0px}          
+                    
+        .tituventana { width:100%
+                      ;height:90%
+                      ;border-collapse:collapse
+                      ;border: 1px solid #ffffff
+                      ;margin:auto
+                      ;padding:0px}
+                      
+        .tituventana td {
+                       border-radius:           0px
+                      ;-ms-border-radius:       0px
+                      ;-moz-border-radius:      0px
+                      ;-webkit-border-radius:   0px
+                      ;-khtml-border-radius:    0px
+                      ;text-align:center
+                        }                      
+
+        /* #con_0_1, #con_0_2, #con_0_3, #con_0_4, #con_0_5, #con_0_6, #con_0_7, #con_0_8, #con_0_9, #con_0_10, #con_0_11 {display:none;max-height:95%;border:solid 0px #ddd;overflow:auto;} */
+        
+        .content { margin:auto
+                  ;padding:0px
+                  ;border:solid 0px #899
+                  ;height:100%
+                  ;width:100%
+                  ;overflow:auto}
+ 
+       /* ------------------------------------------------------- */ 
+       /* Clases que se generan en los grid de los mantenimientos */ 
+       /* ------------------------------------------------------- */        
+       
+            .click       {cursor:pointer;font-size:100%;font-weight:bold;color:#000;}
+            .fora        {font-size:90%;color:#095;cursor:pointer;font-weight:bold;}
+       table.tabla_grid  {width:100%;border-collapse:collapse;border:solid #fff 0px;}
+       table.tg          {width:100%;border-collapse:collapse;border:solid #fff 0px;}
+           a.sdf         {color:#fff;background-color:#090;}
+           a.cdf         {color:#a00;}
+          td.num         {} 
+      
+      /* ------------------------------------------------------- */ 
+      /* ------------------------------------------------------- */ 
+      /* ------------------------------------------------------- */        
+        
+        .t_cabe_1     {color:#fff;text-align:center;font-size:100%;border-collapse:collapse;border:solid #ddd 1px; margin:0px; padding:0px;}
+        .t_cabe_2     {color:#fff;text-align:left  ;font-size:100%;border-collapse:collapse;border:solid #fff 1px; margin:1px; padding:2px;}
+        
+        .t_dato_c      {text-align:center;border:solid #fff 1px;padding: 2px 5px 2px 5px;}
+        .t_dato_l      {text-align:left  ;border:solid #fff 1px;padding: 2px 5px 2px 5px;}
+        .a_contdetalle {cursor:pointer   ;font-size:100%       ;font-weight:normal;color:#07a;}
+        
+    </style>
+
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server"></asp:ContentPlaceHolder>
+
+</head>
+
+<body runat="server" id="cuerpomaestro" onresize="ResizeMaster()" style="width:100%;height:100%;margin:auto;text-align:center;" >
+
+    
+    <!-- ---------------------- -->       
+    <!-- --- Menu Lateral ----- -->
+    <!-- ---------------------- -->
+
+    <div id="MENULATERAL"  
+        class="MENULATERAL"
+        runat="server" 
+        style="  position                :absolute
+                ;border                  :0px solid #f00
+                ;left                    :5px
+                ;top                     :20px
+                ;height                  :auto
+                ;width                   :auto
+                ;padding-top             :5px;  
+                ;padding-right           :15px;  
+                ;background-color        :rgba(255,255,255,1)
+                ;vertical-align          :middle
+                ;z-index                 :99999
+                ;-webkit-box-shadow      :5px 5px 15px 5px rgba(0, 0, 100, 0.25)
+                ;-moz-box-shadow         :5px 5px 15px 5px rgba(0, 0, 100, 0.25)
+                ;box-shadow              :5px 5px 15px 5px rgba(0, 0, 100, 0.25)
+                ;border-radius           :10px
+                ;-ms-border-radius       :10px
+                ;-moz-border-radius      :10px
+                ;-webkit-border-radius   :10px
+                ;-khtml-border-radius    :10px"
+                >  
+    ></div>
+
+    <!-- ---------------------- -->       
+    <!-- --- Tabla de Títulos - -->
+    <!-- ---------------------- -->
+
+    <table style="border-collapse:collapse
+                 ;padding        :0px
+                 ;border         :0px solid #f00
+                 ;width          :100%
+                 ;height         :auto
+                 ;margin         :auto">
+        <!-- ---------------------------------- -->
+        <!-- -------- Barra de Títulos -------- -->
+        <!-- ---------------------------------- -->
+        <tr>
+            <td style="vertical-align:top;text-align:center;border:0px solid #aaa;width:100%;padding:0px" >
+                <div id="fondocabecera" style="z-index:9000
+                                              ;padding:0px
+                                              ;margin:auto
+                                              ;border:solid 0px #0a0
+                                              ;box-shadow:5px 5px 15px 5px rgba(0, 0, 0, 0.25)
+                                              ;width:100%
+                                              ;max-height:2vw
+                                              ;overflow: auto
+											  ;background:black
+                                              ;background-size:100% 100%
+                                              ;background-repeat:no-repeat
+                                              ;background-position:center;">
+                    
+                    <div id="SOMBRA" class="divsombra">
+                        <table class="tabla_titulos" style="border-collapse:collapse;margin:auto;border:dotted 0px #ccc;width:100%;padding:0px;text-align:center">
+                            <tr>
+                                <!-- ---------------------- -->       
+                                <!-- --- Icono Home   ----- -->
+                                <!-- ---------------------- -->
+                                <td class="tablasombra" id="td_titulos_0_home" runat="server" style="width:2%">
+                                    <img id="icono_menu_home"
+                                            runat="server" 
+                                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAABP0lEQVRYhe2XP0oDQRSHfxvEwj8JaqdWQdCAIF5E8Ag26SziEQKeQ/AGnsLGwrQ5gcROEMXifTYTGDa77mR2dm32wcAw7837vmJ4MFJkACMzm5nZDBjF9qkDX+DC7duRyMNblSiAP7vVvARwamZvHvwF2AP6OYl34LwVuJdvTqIK3qhEKLwRiXXhSSVi4Ukk6sJrSaSCR0kARwVDph8L/0NiARwWFU5Sw8skgMky1/Pqtrz9NMuyj1QCrte0iNVbLW83OoGN0EJgIOlB0kVF6aukm9A3FCwg6UrSdUDdUNKTpMfUArve/lPSTy6/KWnb7XdCm8a+gXGWZfv+kjSOafTvj7AT6AQ6gbJBdA/c5c6O1+h7C+Sn5kGVgD/ZLisA3wVn/v0zt8ria+UEGJrZnIows7KPycDlqu7PgZPlvV/yCYrn7TTT0AAAAABJRU5ErkJggg=="
+                                            style="cursor:pointer;vertical-align:middle;width:1vw;height:auto;" 
+                                            lang="TRADUCIR"
+											title="Ir a Menú DashBoard"
+											alt="<font lang='ES'>Ir a Menú DashBoard</font>"
+                                            onclick="var h=function(){window.location.href='login.aspx?dashboard=S'}; 
+                                                     var callbacks=$.Callbacks(); 
+                                                     callbacks.add(h); 
+                                                     callbacks.fire(); " />
+                                </td>
+                                <!-- ---------------------- -->
+                                <!-- --- Icono Menú   ----- -->
+                                <!-- ---------------------- -->
+                                <td class="tablasombra" id="td_titulos_0_menu" runat="server" style="width:2%">
+                                    <img id="icono_menu_hamburguesa"
+                                            runat="server" 
+                                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAAVElEQVRoge3WwQ2AUAhEQb6xcK0ci5AEQmYq2L29CAAanMx8ukdUOJmZ3SMqXN0DqjgyzR0Rb/cIAKCIjJ9mTTQ6Mo2MB4BNZPw0a6LRkWlkPAB/fId1GBOc3m2dAAAAAElFTkSuQmCC"
+                                            style="cursor:pointer;vertical-align:middle;width:1vw;height:auto;"
+                                            lang="TRADUCIR"
+											title="Abre el Menú Principal"
+											alt="<font lang='ES'>Abre el Menú Principal</font>"
+                                            onclick    ="var ml=document.getElementsByClassName('MENULATERAL');
+                                                        if (ml) {$(ml[0]).show('slow')};" 
+                                            onmouseover="return;var ml=document.getElementsByClassName('MENULATERAL');
+                                                        if (ml) {$(ml[0]).show('slow')};" />
+                                </td>
+                                <!-- ----------------------------- -->
+                                <!-- --- Icono Menú General  ----- -->
+                                <!-- ----------------------------- -->
+                                <td class="tablasombra" id="td_titulos_0_menu_general" runat="server" style="width:2%">
+                                    <img id="icono_menu_general"
+                                            runat="server" 
+                                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAAVElEQVRoge3WwQ2AUAhEQb6xcK0ci5AEQmYq2L29CAAanMx8ukdUOJmZ3SMqXN0DqjgyzR0Rb/cIAKCIjJ9mTTQ6Mo2MB4BNZPw0a6LRkWlkPAB/fId1GBOc3m2dAAAAAElFTkSuQmCC"
+                                            style="cursor:pointer;vertical-align:middle;width:0.8vw;height:auto;"
+                                            lang="TRADUCIR"
+                                            title="Abre el SubMenú General"
+											alt="<font lang='ES'>Abre el Menú General</font>"
+                                            onclick    ="var ml=document.getElementsByClassName('MENUGENERAL');
+                                                        if (ml) {$(ml[0]).show('slow'); tiempo_menu_general=2*60;};
+                                                        " 
+                                            onmouseover="return;var ml=document.getElementsByClassName('MENUGENERAL');
+                                                        if (ml) {$(ml[0]).show('slow'); tiempo_menu_general=2*60};" />
+                                </td>
+                                <!-- ----------------------------- -->       
+                                <!-- --- Barra Informativa   ----- -->
+                                <!-- ----------------------------- -->
+                                <td class="tablasombra" id="td_titulos_2_apli" runat="server" style="width:23%">
+                                    <asp:Label ID="titulo_aplicacion" runat="server" Text="MENU" Style="vertical-align:middle;font-size:0.5vw" ></asp:Label>
+                                    <a id="navegador" class="refresco_normal" style="vertical-align:middle;font-size:0.5vw" ></a>
+                                </td>
+                                <!-- ----------------------------- -->
+                                <td id="td_titulos_3_bbdd" runat="server" style="width:15%">
+                                    <asp:Label ID="bbdd" runat="server" Text="BBDD" Style="vertical-align:middle;font-size:0.5vw" ></asp:Label>
+                                    <a id="refresco" class="refresco_normal" style="vertical-align:middle;font-size:0.5vw"></a>
+                                </td>
+								<!-- ----------------------------- -->
+                                <td id="td_titulos_4_user" runat="server" style="width:auto">
+                                    <asp:Label ID="usuario_aplicacion" runat="server" Text="" lang="TRADUCIR" Style="vertical-align:middle;font-size:0.5vw"></asp:Label>
+                                </td>
+								<!-- ----------------------------- -->
+                                <td id="td_titulos_7_idio" runat="server" style="width:7%;border:solid 0px #000;text-align:center">
+                                    <img style="visibility:hidden;cursor:pointer;vertical-align:middle;height:auto;width:0.8vw;" onclick="if (!Visualizar_Banderas('ES')) {return false;}; if (!CargaIdioma()) {return false;};" id="id_spain" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAiElEQVRYR2NkGGDAOMD2M4w6YDQEwCFwR4fhACMDgz09E+R/BoaDKlcYHEYdMBoC4BD41MX8hFWQSZqeifD3+39P+cr+yoAd8GMx6wd2OSZ+ejrg56N/HzlifwuMOmA0BEZDYHCEALggEqJzQfQOqSAarY5HQ2DAQ4CetSC6XaPN8tEQGPAQAAAkj4Ihq0BviQAAAABJRU5ErkJggg=="  />    
+                                    <img style="visibility:hidden;cursor:pointer;vertical-align:middle;height:auto;width:0.8vw;" onclick="if (!Visualizar_Banderas('EN')) {return false;}; if (!CargaIdioma()) {return false;};" id="id_ingla" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAErklEQVRYR+2We0yTVxjGn9642NZS7heRi6UgmAiYbW5zSDAz012yTUZxCY4IuLggglnGTGAmY47NbQiMxW0CY7qE1uB0G4w/lhDxEnEXZCEQKQWKcikXwV6BUuhyDral3PuX+4OTNPnyne+859fnfd/nHAae8GA84f2xDrCuAFWg+qpCwuGwfMjz+KMp/YWabsVKxXkoMVTkNzvuKVQ0+9M1otiBQaZwdLV15Nvj6VujPVtv+UOvfRhfcPQMBeguPDu56c39zhyxmO57484Qvqlsh2pkYkmO4oKdiJzqwWjmUTrvWXYO7c4hyM5vWpY7OsodHyZ5g/3tGRjvNmPqtbenQk/muFAA5YlcI+d2A4eflgFeUjIYfD50ehN+kMpxuU65KKgjALwNbOQe247o1l+guyQFk8eDMO8UegQidYTIzY0C1NT2KF/S3Q7SlH8PJn8jBNk5cImLpxsrejQoq2xHS9uYFWStAImvBCMlQofJL09jVqsBT3IQ/PQjNE5Hl9oGEPdG3bWw4I27T6aFwOPnchjq6+AUEwth3kdg+dE0o76hj6ZFZzBhNQAi9zFJIIQ/FWPyeiNcXoiDIPuENVZNrRIXazpv/frj3l1UAQLAAHaTZxv1J5jV6eao0zIoBEnL1xVt2LcncMkayCv8G+9IwrDf0ARNxXkqN9nYqqZSg7KKOTXNQOP1Ky/HLwIgG5G8ZaZF4vmu36GTVdO0EDWcYndYQZw6/rUrQpVPBAS9bTB+V4rpTjn4h9MpPK0ngwlVUjnIP7cMO4D6hgd9Pl6uAQurjc/lIIClAWt0iE5xwsQ0IBnG5n/sAAgceUcGy8/PKrdaa8T9Ph1MM2a78EMjE/37EgI3UQU6/vhLG+zB5C3bQ0tMTMs7oC45S2cEx3PAEYc7shzKh7O68Bef4lOA3kOpJnZnG8uhCGYzwHjs5POf1xjEFBY1E3Shiv3/AKApcGc4mAI51KWPU5BFUjDnomsdyjGzLQWkCH29N9gVoasLCwG+XPC4bBpzWi6HWa8Dg8ujmy0sQnb0DjCZtu1nBgcwo1LRF+rNkVANT2Bm1laIqmGDrQjn+wBpQdLLb70aQhebtVqMn/7YaijjiRkwe/lh81jnorPg5h0VUpPFtI3JOuIF+ktSamqcI1n4on4CN/+c66glfWDX0z7IPBwJX29X+pFeVm01FJf383DlgRBVss4VndDXy5V6CIllUU5d/BWMLXfBlSRDufMACiu7MTgyYTOilMzGppx3o56J2eZBFxF5SYtZDKVVtAel1fetp+NqVkxi0NMvazsIEBmGuloQENI5xNRkqoCuVIlYRLvgnuLRo/AtAgGVrfI89DIpnKJjYHovF5/Jhu0OIvL9WgAs1ZAqCQP5WdKpLi6iZ830swnTwUWfO1kBAu/dEKhLigCzGcL8U5AOBqDmtx5qowuHIwBkLVGBqEFUsSjcf7XeGFqQ72x3H+AmJaP3uUR8WtG17GXEUQXmw9MaS4ukQHbH8bX8cx9M+vrztEHbxkrK21tW6+WUA1tE/uYxL6GimbbuuCi2f4DhPnLxcteKVzny7dZQN97eBH+RyWQePPi6SLZ+K15XYF2B/wC9D18/KjAN7AAAAABJRU5ErkJggg=="  />    
+                                    <img style="visibility:hidden;cursor:pointer;vertical-align:middle;height:auto;width:0.8vw;" onclick="if (!Visualizar_Banderas('GE')) {return false;}; if (!CargaIdioma()) {return false;};" id="id_alema" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAl0lEQVRYR2NkGGDAOMD2M4w6YDQEwCHgGplygIGRwZ6uCfI/w8Hdy+c4jDpgNAQGRwjEBocv/cbMqkXPXMD19/e1xWtXRoND4L8Nw4BkQ8YjDJBsOOqA0RAY+BCYybyU4T8jXbMhA+P/a4zpf6HZ8CD7AQYGOteGDAwHGe1/QrPhqANGQ2CgQ4CetSC6XaPN8tEQGPAQAAA67W8hEvcyOwAAAABJRU5ErkJggg=="  />    
+                                    <img style="visibility:hidden;cursor:pointer;vertical-align:middle;height:auto;width:0.8vw;" onclick="if (!Visualizar_Banderas('FR')) {return false;}; if (!CargaIdioma()) {return false;};" id="id_franc" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAZ0lEQVRYR2NkGGDAOMD2M4w6YDQEwCFgF7j1ACMDgz2+BMnDw3Jx4SQLfWISrWC04kWmz+/wq/3PcJDxCIPDqANGQ2A0BEZDYDQERkNgNARGQ2A0BAZHCBDTzqOVmtFm+WgIDHgIAACXh9whq0KQ3gAAAABJRU5ErkJggg=="  />    
+                                    <img style="visibility:hidden;cursor:pointer;vertical-align:middle;height:auto;width:0.8vw;" onclick="if (!Visualizar_Banderas('IT')) {return false;}; if (!CargaIdioma()) {return false;};" id="id_itali" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAZklEQVRYR2NkGGDAOMD2M4w6YDQEwCGQMc/iAAMjgz2+BMnJynex2nu1PjGJVjBa8SLT53f41f5nOMh4hMFh1AGjITAaAqMhMBoCoyEwGgKjITAaAoMjBIhp59FKzWizfDQEBjwEAITH3CEOyKkzAAAAAElFTkSuQmCC"  />    
+                                    <asp:Label class="codigo_idioma" ID="codigo_idioma" runat="server" Text="" Style="vertical-align:middle;font-size:0.5vw"></asp:Label>
+                                </td>
+								<!-- ----------------------------- -->
+                                <td id="td_titulos_5_time" runat="server" style="width:15%">
+                                    <a id="horasistema" class="refresco_normal" style="vertical-align:middle;font-size:0.5vw" ></a>
+                                </td>
+								<!-- ----------------------------- -->
+                                <td class="tablasombra" id="td_perfil_usuario" runat="server" style="width:5%">
+                                    <img id="icono_perfil_usuario" runat="server" 
+                                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAACH0lEQVRIibWVzUtWQRTGf+NHUghhKhgVQQS1zVVGENK6IhByUQZ+LFoUrVy3bltQFG2iIlwILrI2oS+h1j/QzpJctLNeqFbpr4VHu17n1XzDA8M998wz5znP3LlnYJctlQPqfqChznwrKaVqlkA9CzwFGoHfdRI0xdqBlNLMhhn1k3q6zsTFPD3qfDnYpi5us/CI+lJ9oR7YBruotsHfvW4EljPA4rc4D7QAB4GeAmZPhmM5ctb+mOpVYEm9qTYC54A3wDTQq+5T7wLf1AtbKULtUBcK7y3qL/Wy+lr9rr5VD6sn1Sn1p/pYva5+LuVbUDtqEkTsjvos/K5MUa1qgzqjXquHYG+oaFWTOqLOxRiO2An1S4Z8naApM3mI1f3uBSoppR/qCDAE3AjYA8CU0hN1Sb0HzALTKaWv5ZwbFKhj6iv1tno0YnPqqQK+W50N/7h6S51Ux8oKcqdIoDnUbVIYVmwxAnsCaxZdUtCp9qn31UrEhtX3UXm3+kEdjLlKYPvUzrKCTQSFWLNaDcKkDqmzMQYLxVTV5tLafyIYVcfDzx3TrniOq6M7IlAbo7J+dSL8inosRiViE+qV8BtyBNlWkVJaZvVYPgTeAe3AR+AScDH89ph7BAynlFZyuWpuUcSLVfXHUZxU+3OYrRSsd7+SkmJV00A1xlQNzJpt7s7qvNqTAe/I1DMWLpzijzQAPHe1Nf/3lbkW2PVLf9ftD3c0V9i7s7zAAAAAAElFTkSuQmCC"
+                                            style="cursor:pointer;vertical-align:middle;width:1vw;height:auto;" 
+                                            lang="TRADUCIR"
+											title="Acceso a Perfil de Usuario"
+                                            alt="<font lang='ES'>Acceso a Perfil de Usuario</font>"
+                                            onclick="Pide_Perfil();" 
+                                    />
+                                </td>
+								<!-- ----------------------------- -->
+                                <td id="td_titulos_6_entr" runat="server" style="width:3%;display:none">
+                                    <asp:HyperLink 
+                                            ID="logout" 
+											Style="vertical-align:middle;font-size:0.5vw"
+											title="Logout"
+                                            runat="server" 
+                                            ImageUrl="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABvElEQVRIie2Sv08TYRjHP8970l61rYcuJLUpYWZgIsZETcT/wNFNcXKQBYKQyq+ENBfHRh004e8QHWQ0MVGDxtFYA4mLSIjcXXp9Ha6Uuxbu4Oqm3+399fm8z/s+8D8JkfBg/8aVik/zBcJVIHNKlgeyYUjzbu7Vu28Hkyq8ow2fSAEnOKNv+lo9D09GBO2b9xm5frzgqJuL9EwlJMLoFkSiKiPk7GeoUrnXW7TITs0hRSvWFisYuHUbVa5gztdQQ6UI3KzWOHP5Gpk799ML3LqNv/keuXARc/ExqlRGCgFclYdpbTXw1p7ECiIPvDcxrnt2ZLKYM0sYo2Po3V/o33uooRKtrQbO8gx652fPkfzrtx1ubAUAeC6OvYD/ZRMpng/gP7aPhXcnWQBINofkC4dj8yxyLn+So8kCKViYj2qoSxVa2987lZhV+8juOpWgA29/qLM0jbM6H3y8NXgiSawgO/UwgDe+4ixOB29+8CefPyLWIJl7D9ILvLWn+J8+4KzMond3QgsuTq1K8806bt2OFSS3aYrEtan3F/hueNAlkI3++TrCiAgMbUyCXiddJR7CS0Nak/1c7x/MH/Udje9pcGcTAAAAAElFTkSuQmCC"
+                                            NavigateUrl="~/login.aspx"  
+                                            Visible="false" />
+                                </td>
+                                <td class="tablasombra" id="td_titulos_0_salir" runat="server" style="width:3%">
+                                    <img id="icono_menu_salir"
+                                            runat="server" 
+                                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABvElEQVRIie2Sv08TYRjHP8970l61rYcuJLUpYWZgIsZETcT/wNFNcXKQBYKQyq+ENBfHRh004e8QHWQ0MVGDxtFYA4mLSIjcXXp9Ha6Uuxbu4Oqm3+399fm8z/s+8D8JkfBg/8aVik/zBcJVIHNKlgeyYUjzbu7Vu28Hkyq8ow2fSAEnOKNv+lo9D09GBO2b9xm5frzgqJuL9EwlJMLoFkSiKiPk7GeoUrnXW7TITs0hRSvWFisYuHUbVa5gztdQQ6UI3KzWOHP5Gpk799ML3LqNv/keuXARc/ExqlRGCgFclYdpbTXw1p7ECiIPvDcxrnt2ZLKYM0sYo2Po3V/o33uooRKtrQbO8gx652fPkfzrtx1ubAUAeC6OvYD/ZRMpng/gP7aPhXcnWQBINofkC4dj8yxyLn+So8kCKViYj2qoSxVa2987lZhV+8juOpWgA29/qLM0jbM6H3y8NXgiSawgO/UwgDe+4ixOB29+8CefPyLWIJl7D9ILvLWn+J8+4KzMond3QgsuTq1K8806bt2OFSS3aYrEtan3F/hueNAlkI3++TrCiAgMbUyCXiddJR7CS0Nak/1c7x/MH/Udje9pcGcTAAAAAElFTkSuQmCC"
+                                            style="cursor:pointer;vertical-align:middle;width:1vw;height:auto;" 
+                                            lang="TRADUCIR"
+											title="Salir"
+											alt="<font lang='ES'>Ir a Menú DashBoard</font>"
+                                            onclick="var h=function(){window.location.href='login.aspx'}; 
+                                                     var callbacks=$.Callbacks(); 
+                                                     callbacks.add(h); 
+                                                     callbacks.fire(); " />
+                                </td>								
+                                <!-- ------------- -->       
+                                <!-- --- Fin ----- -->
+                                <!-- ------------- -->
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- ------------------------ -->       
+    <!-- --- Form de Contenidos - -->
+    <!-- ------------------------ -->
+
+    <form id="fmaster"  
+	      runat="server" 
+          defaultbutton="btnDisableEnter" 
+          style="height:94vh;width:99%;padding:0px;margin:auto;border:0px solid #f0f;overflow:auto"
+          onmouseover="var ml=document.getElementsByClassName('MENULATERAL'); if (ml) {$(ml[0]).hide('slow')};"
+        >
+
+        <asp:Button ID="bt_ed_perfil" Style="display:none" runat="server" ClientIDMode="Static" Text="Edicion" />
+        <asp:Button ID="bt_ok_perfil" Style="display:none" runat="server" ClientIDMode="Static" Text="Edicion" />
+        <asp:Button ID="bt_ko_perfil" Style="display:none" runat="server" ClientIDMode="Static" Text="Edicion" />
+        
+        <ajaxtool:DragPanelExtender id="DPExt_perfil" runat="server" TargetControlID="capa_perfil" DragHandleID="dcapa_perfil"></ajaxtool:DragPanelExtender>
+        <ajaxtool:modalpopupextender id="MP_perfil" runat="server"   TargetControlID="bt_ed_perfil" PopupControlID="capa_perfil" CancelControlID="bt_ko_perfil" DropShadow="false" BackgroundCssClass="FondoAplicacion" RepositionMode="None"></ajaxtool:modalpopupextender>
+
+        <!-- ------------------------- -->       
+        <!-- --- Tabla de Contenidos - -->
+        <!-- ------------------------- -->
+
+        <table id="tabla_contenidos"
+             style ="border-collapse:collapse
+                    ;padding        :0px
+                    ;border         :0px solid #f00
+                    ;width          :100%
+                    ;height         :100%
+                    ;margin         :auto
+                    ">
+            <!-- ------------------------------ -->
+            <!-- -------- Contenidos ---------- -->
+            <!-- ------------------------------ -->
+            <tr>
+                <td id="principal" 
+					style="vertical-align:top;text-align:left;padding:0px;margin:auto;border:0px solid #efefef;width:100%"
+                    onmouseover="var ml=document.getElementsByClassName('MENULATERAL');
+                                 if (ml) {$(ml[0]).hide('slow')};
+                                 var lt=document.getElementsByClassName('LOGOTIPO');
+                                 if (lt) {$(lt[0]).show('slow')};"
+                 >
+                    <!-- -------------------------- -->
+                    <!-- ----- Menú General ------- -->
+                    <!-- -------------------------- -->
+                    <div id="MENUGENERAL" 
+                         class="MENUGENERAL"
+                         runat="server" 
+                         style="border:solid 1px #eee;margin:auto;padding:0px;border-bottom-width:0px;border-top-width:0px;margin-left:200px;"
+                         onmouseover="dentro_menu_general='SI';"
+                         onmouseout="dentro_menu_general='NO';">
+                    </div>
+                    <!-- -------------------------- -->
+                    <!-- -- Contenidos Hijos ------ -->
+                    <!-- -------------------------- -->
+                    <div class="main" 
+                         style="padding:0px; margin:auto;border:0px dotted #ccc;width:98%;height:98%;margin:auto;">
+                        <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+                    </div>
+                    <!-- ---------------------------------- -->
+                </td>
+                <!-- ---------------------------------- -->
+            </tr>
+        </table>
+        <!-- ---------------------------------- -->
+        <!-- -------- Button Form ------------- -->
+        <!-- ---------------------------------- -->
+        <asp:Button ID="btnDisableEnter" runat="server" Text="" OnClientClick="return false;" Style="display:none;"/>
+    </form>
+
+    <!-- ------------------------------------- -->
+    <!-- Panel de Peticion de Datos del Perfil -->
+    <!-- ------------------------------------- -->
+	
+    <div id="ocapa_perfil" class="FondoAplicacion" runat="server" style="position:absolute;width:100px;height:100px;top:-10000px;left:0px;"> </div>
+    <asp:Panel id="capa_perfil" 
+          runat="server" 
+          ClientIDMode="Static" 
+          Style="display:none" >
+
+        <table style="width:100%;margin:auto;" >
+            <tr>
+                <td style="text-align:center;width:2vw">
+                    <img alt="Cerrar" 
+					     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAADXElEQVRYhe2XS2xUVRjHf9+5d6bYWKSTJkUcY0QWroqmtLWuJu1MJCTYpD524864ERNS2EhkQYOaAKLWha5Zo2maoNZSiQsexUJx4c4QY6GER7WApvO453Mx7869w207Xek/mWTynfOd3//c+53Hhf+6ZC1J9xPdHcZxt4kljniqJjJv1bu5+ezMvQ0zsJTo32GcfFqQIWBnQLc5FcY9653aMj37W1MMPBzs6xQ4rOjbQCSk35wIX1njjrZNnr+9ZgP/DPb2W/ga2BoSvFJ3VfW1tunLPwV1MEEND5I9b1r4cR1wgA4RmXww0PtGUAffJ3B/oOdlIzINtKwDXq2sqqb8nkSdgYeDfZ2g14DOJsFLuqXRXFfbt1fvVAfrXoHA4Q2AA2w1mcgHK4M1BpYS/TuK1e4raY/hJlKBBDeRQtpjge0qvLOc7NkeaMA49i0ClppsaWfTsS9oOTRK5NXX6+G799Jy6AibPvkSiXUEeYh6VtKBBgQdCsp0XtiFeeZZECG6bwR3T6Wru2eIlpH3QQwm/jRO14tBw6BCDaNchIXt1blTn1KRu3tvGYQq2bHjaDZTG/v8GLmJ042GUc91Op74/sIigFuKmoiJYxvlQf67CYAyMPreQVAFkbBwAHHyNg4sQtUrEE+ffFRmyUTmxIcFMKwWXpTdVvpXNqAiGjK7XiKFX/j+ZValCK0shMmt1EFh5qUnEd13wHd1+Mu5WWfAGubDwysFlzlxFNQWV0coE+o53KgzULxMzAXCE6kquCVz8iNyE6cLNXHy4yoTIw03K4QrpRVQYwBAhfGgPG/uZ+zv14szP07+TKVr/sx4sTAtdv4PvF+uBvNVaxg1lfPXQPdzrji/AlHf5PYYzs5u8ud+8B3cTaTwrs2ify76tgNZx+H5xyZnrvsaAPg72TumyruBU1iPRD99fOry/upQ3WlojTsK3NoA/ILN26Mrg3UG2ibP3zYwDGSaCF82IsObz83efaQBgNazMxdUSTfJxLIi6dapSxf9GhtfSpN9L1nVb1j7vXDBiAwHwaHBpRSgderSRY3mukQZA7KrAGdBP7Oe19UIDqv4MFlO9mz3rKSL53nAga9XBDNuHD1VvdSaYqBaS6/0xxyPp8Tm4gBqIvOew43qHe5/hdW/dfxGq1OsGFAAAAAASUVORK5CYII=" 
+ 					     style="cursor:pointer;vertical-align:middle;width:1vw;height:auto;" 
+						 onclick="WCancela_Pide_Perfil();" />
+                </td>
+                <td style="width:auto">
+                    <asp:Panel id="dcapa_perfil" runat="server" ClientIDMode="Static" class="dragPanel" style="border: 1px solid #899;color: #fff;font-weight: normal;padding: 0px;margin:0px;width:100%;margin:auto;cursor:-webkit-grab;cursor: grab;" >
+                        <table class="tituventana">
+                            <tr>
+                                <td style="width:auto;text-align:left;vertical-align:middle;margin:auto;background:black;color:white;">
+                                    <a lang="TRADUCIR" id="titulo_ventana_perfil">Datos del Perfil</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </asp:Panel>
+                </td>
+                <td style="text-align:center;width:2vw">
+                    <img alt="Cerrar" 
+					     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAADXElEQVRYhe2XS2xUVRjHf9+5d6bYWKSTJkUcY0QWroqmtLWuJu1MJCTYpD524864ERNS2EhkQYOaAKLWha5Zo2maoNZSiQsexUJx4c4QY6GER7WApvO453Mx7869w207Xek/mWTynfOd3//c+53Hhf+6ZC1J9xPdHcZxt4kljniqJjJv1bu5+ezMvQ0zsJTo32GcfFqQIWBnQLc5FcY9653aMj37W1MMPBzs6xQ4rOjbQCSk35wIX1njjrZNnr+9ZgP/DPb2W/ga2BoSvFJ3VfW1tunLPwV1MEEND5I9b1r4cR1wgA4RmXww0PtGUAffJ3B/oOdlIzINtKwDXq2sqqb8nkSdgYeDfZ2g14DOJsFLuqXRXFfbt1fvVAfrXoHA4Q2AA2w1mcgHK4M1BpYS/TuK1e4raY/hJlKBBDeRQtpjge0qvLOc7NkeaMA49i0ClppsaWfTsS9oOTRK5NXX6+G799Jy6AibPvkSiXUEeYh6VtKBBgQdCsp0XtiFeeZZECG6bwR3T6Wru2eIlpH3QQwm/jRO14tBw6BCDaNchIXt1blTn1KRu3tvGYQq2bHjaDZTG/v8GLmJ042GUc91Op74/sIigFuKmoiJYxvlQf67CYAyMPreQVAFkbBwAHHyNg4sQtUrEE+ffFRmyUTmxIcFMKwWXpTdVvpXNqAiGjK7XiKFX/j+ZValCK0shMmt1EFh5qUnEd13wHd1+Mu5WWfAGubDwysFlzlxFNQWV0coE+o53KgzULxMzAXCE6kquCVz8iNyE6cLNXHy4yoTIw03K4QrpRVQYwBAhfGgPG/uZ+zv14szP07+TKVr/sx4sTAtdv4PvF+uBvNVaxg1lfPXQPdzrji/AlHf5PYYzs5u8ud+8B3cTaTwrs2ify76tgNZx+H5xyZnrvsaAPg72TumyruBU1iPRD99fOry/upQ3WlojTsK3NoA/ILN26Mrg3UG2ibP3zYwDGSaCF82IsObz83efaQBgNazMxdUSTfJxLIi6dapSxf9GhtfSpN9L1nVb1j7vXDBiAwHwaHBpRSgderSRY3mukQZA7KrAGdBP7Oe19UIDqv4MFlO9mz3rKSL53nAga9XBDNuHD1VvdSaYqBaS6/0xxyPp8Tm4gBqIvOew43qHe5/hdW/dfxGq1OsGFAAAAAASUVORK5CYII=" 
+						 style="cursor:pointer;vertical-align:middle;width:1vw;height:auto;" 
+						 onclick="WCancela_Pide_Perfil();" />
+                </td>
+            </tr>
+        </table>
+        <div id="datos_perfil"   style="height:95%;width:100%;border:solid 0px #ddd;background:#fff"></div>
+        <div id="botones_perfil" style="margin:10% 10% 10% 10%;text-align:center"></div>
+	</asp:Panel>
+
+</body>
+</html>

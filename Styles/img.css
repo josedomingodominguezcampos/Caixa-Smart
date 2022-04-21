@@ -1,0 +1,4 @@
+﻿
+
+.im_factura {background-image: url("img/doc.png")   ; background-repeat: no-repeat; background-color: transparent; display: inline;border: none;cursor: pointer;width:25px;  height:25px; }
+.im_servicio {background-image: url("img/peaje.ico"); background-repeat: no-repeat; background-color: transparent; display: inline;border: none;cursor: pointer;width:25px;  height:25px; }

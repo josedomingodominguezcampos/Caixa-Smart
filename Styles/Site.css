@@ -1,0 +1,488 @@
+﻿/* DEFAULTS
+----------------------------------------------------------*/
+
+body   
+{
+    background:#ffffff;
+    font-size :10pt;
+    margin    :0px;
+    padding   :0px;
+    color     :#000000;
+}
+
+p {margin-bottom: 3px;line-height: 8px;}
+
+/* HEADINGS   
+----------------------------------------------------------*/
+
+h1, h2, h3, h4, h5, h6
+{
+    font-size     : 160%;
+    color         : #600;
+    text-transform: none;
+    font-weight   : normal;
+    margin-bottom : 0px;
+}
+
+h1
+{
+    font-size: 130%;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+h2
+{
+    font-size: 120%;
+    font-weight: 600;
+}
+
+h3
+{
+    font-size: 110%;
+}
+
+h4
+{
+    font-size: 100%;
+}
+
+h5
+{
+    font-weight: 100;
+    font-size: 100%;
+}
+
+h6
+{
+    background:#fe0;
+    font-size:100%;
+}
+
+kdb
+{
+    background:#fe0;
+    font-size:100%;
+}
+
+.rightColumn > h1, .rightColumn > h2, .leftColumn > h1, .leftColumn > h2
+{
+    margin-top: 0px;
+}
+
+
+/* PRIMARY LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+.page
+{     
+     background-color: #fff
+    ;margin: 10px auto 0px auto
+    ;border: 1px solid #fff 5px solid #000
+}
+
+.tabla_titulos
+{
+     padding        :1px
+    ;margin         :1px
+    ;vertical-align :middle
+    ;border-collapse:collapse
+    ;width          :100%
+}
+
+.tabla_titulos td 
+{
+     color         :#000 
+    ;font-size     :100%
+    ;padding       :3px
+    ;margin        :3px
+    ;border        :0px solid #aaa
+    ;vertical-align:middle
+    ;text-align    :center
+}
+
+.header
+{
+    position: relative
+    ;margin: 0px
+    ;padding: 0px
+    ;background: #fff /* #4b6c9e */
+    ;width: 100%
+}
+
+.header h1
+{
+    font-weight: 700;
+    margin     : 0px;
+    padding    : 0px 0px 0px 20px;
+    color      : #f9f9f9;
+    border     : none;
+    line-height: 22px;
+    font-size  : 2px;
+}
+
+.main
+{
+    padding: 0px ;
+    margin: 3px 3px 3px 3px;
+    width:100%;
+}
+
+.leftCol
+{
+    padding: 6px 0px;
+    margin: 10px 8px 8px 8px;
+    width: 200px;
+    min-height: 200px;
+}
+
+.footer
+{
+    color: #4e5766;
+    padding: 8px 0px 0px 0px;
+    margin: 0px auto;
+    text-align: center;
+    line-height: normal;
+}
+
+
+/* Geolocalizacion
+----------------------------------------------------------*/
+
+#infowindow-content .title {
+    font-weight: bold;
+}
+
+#infowindow-content {
+    display: none;
+}
+
+#datos_mapas #infowindow-content {
+    display: inline;
+}
+
+.pac-card {
+    margin: 10px 10px 0 0;
+    border-radius: 2px 0 0 2px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    background-color: #fff;
+    font-family: Roboto;
+}
+
+#pac-container {
+    padding-bottom: 12px;
+    margin-right: 12px;
+}
+
+.pac-container {
+    z-index:17000;
+}
+
+.pac-controls {
+    display: inline-block;
+    padding: 5px 11px;
+}
+
+.pac-controls label {
+    font-family: Roboto;
+    font-size: 13px;
+    font-weight: 300;
+}
+
+#pac-input {
+    background-color: #fff;
+    font-family: Roboto;
+    font-size: 15px;
+    font-weight: 300;
+    margin-left: 12px;
+    padding: 0 11px 0 13px;
+    text-overflow: ellipsis;
+    width: 400px;
+}
+
+#pac-input:focus {
+        border-color: #4d90fe;
+    }
+
+#pac-input-lat {
+    background-color: #fff;
+    font-family: Roboto;
+    font-size: 15px;
+    font-weight: 300;
+    margin-left: 12px;
+    padding: 0 11px 0 13px;
+    text-overflow: ellipsis;
+    width: 150px;
+}
+
+    #pac-input-lat:focus {
+        border-color: #4d90fe;
+    }
+
+#pac-input-lng {
+    background-color: #fff;
+    font-family: Roboto;
+    font-size: 15px;
+    font-weight: 300;
+    margin-left: 12px;
+    padding: 0 11px 0 13px;
+    text-overflow: ellipsis;
+    width: 150px;
+}
+
+    #pac-input-lng:focus {
+        border-color: #4d90fe;
+    }
+
+#titlegeo {
+    color: #fff;
+    background-color: #4d90fe;
+    font-size: 25px;
+    font-weight: 500;
+    padding: 6px 12px;
+}
+
+#mapagoogle_coordenadas {
+    border: solid 0px #000;
+    text-align: center;
+    width: 99%;
+    height: 5%;
+    margin: auto;
+}
+
+#mapagoogle_mapa {
+    border: solid 0px #000;
+    text-align: center;
+    width: 99%;
+    height: 90%;
+    margin: auto;
+}
+
+#mapagoogle_botones {
+    border: solid 0px #000;
+    text-align: center;
+    width: 99%;
+    height: 5%;
+    margin: auto;
+}
+
+
+
+
+/* TAB MENU   
+----------------------------------------------------------*/
+
+div.hideSkiplink
+{
+    width:100%;
+}
+
+div.menu
+{
+    color: #fff;
+    padding: 4px 0px 4px 4px;
+}
+
+div.menu ul
+{
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    width: auto;
+}
+
+div.menu ul li a, div.menu ul li a:visited
+{
+    background-color: #000;
+    border          : 1px #000 solid;
+    display         : block;
+    line-height     : 16px;
+    padding         : 4px 4px;
+    text-decoration : none;
+    white-space     : nowrap;
+}
+
+div.menu ul li a:hover
+{
+    background-color: #000000;
+    text-decoration: none;
+}
+
+div.menu ul li a:active
+{
+    background-color: #000000;
+    color: #cfdbe6;
+    text-decoration: none;
+}
+
+/* FORM ELEMENTS   
+----------------------------------------------------------*/
+
+fieldset
+{
+    margin: 10px 0px;
+    padding: 10px;
+    border: 0px solid #ccc;
+}
+
+fieldset p 
+{
+    margin: 2px 10px 10px 10px;
+}
+
+fieldset.login label, fieldset.register label, fieldset.changePassword label
+{
+    display: block;
+}
+
+fieldset label.inline 
+{
+    display: inline;
+}
+
+legend 
+{
+    font-size  : 13px;
+    font-weight: normal;
+    padding    : 2px 4px 8px 4px;
+}
+
+input.textEntry 
+{
+    border-left     : 0px solid #aaa;
+    border-right    : 0px solid #aaa;
+    border-top      : 0px solid #aaa;
+    border-bottom   : 1px solid #aaa;
+    background-color:#ffffff;
+    font-size       :130%;
+}
+
+input.passwordEntry 
+{
+    border-left     : 0px solid #aaa;
+    border-right    : 0px solid #aaa;
+    border-top      : 0px solid #aaa;
+    border-bottom   : 1px solid #aaa;
+    background-color:#ffffff;
+    font-size       :130%;
+}
+
+/* MISC  
+----------------------------------------------------------*/
+
+.clear
+{
+    clear: both;
+}
+
+.title
+{
+    display   :block;
+    float     :left;
+    text-align:left;
+    width     :auto;
+}
+
+.loginDisplay
+{
+    font-size : 120%;
+    display   : block;
+    text-align: right;
+    padding   : 10px;
+    color     : White;
+}
+
+.loginDisplay a:link
+{
+    color: white;
+}
+
+.loginDisplay a:visited
+{
+    color: white;
+}
+
+.loginDisplay a:hover
+{
+    color: white;
+}
+
+.failureNotification
+{
+    font-size: 120%;
+    color    : Red;
+}
+
+.bold
+{
+    font-weight: bold;
+}
+
+.submitButton
+{
+    text-align   : right;
+    padding-right: 10px;
+}
+
+a:link, a:visited {color: #aa0000;}
+a:hover  {color: #aa0000;text-decoration: none;}
+a:active {color: #aa0000;}
+
+/* BUTTON */
+
+.button {
+  outline: 0;
+  padding: 2px 2px;
+  display: block;
+  color: #555;
+  font-weight: normal;
+  border: 0px dotted #ccc;
+  border-top-width: 1px;
+ }
+ 
+ .button:hover {
+  color: #fff;
+  background: #4C5A64;  }
+ 
+ /* Vertical List: */
+ 
+ .vertical-list {
+  width:100%;
+  vertical-align:bottom;
+  padding: 0px;
+  background: #222; 
+ }
+
+ 
+ .vertical-list .button:active {
+  padding: 2px 2px;
+  background: #515B62; /* old browsers */
+}
+
+ .vertical-list li { margin: 0 0 3px; }
+ .vertical-list li:last-child { margin: 0; }
+
+li.active {background:#fff;}
+          
+ul.mtabs  {outline    : 0;
+           padding    : 0px 0px 0px 0px;
+           display    : inline;
+           color      :#555;
+           background : #fff;
+           font-size  : 110%;
+           font-weight: normal;
+           /*border: 0px solid #555;*/
+}
+        
+ul.mtabs li {display:inline
+            ;border: 0px solid #ccc
+            ;border-left-width:1px
+            ;padding:2px 5px
+            }
+                         
+ul.mtabs li a           {cursor:pointer; color:#333}        
+ul.mtabs li a:hover     {color: #fff;background: #222;}
+ul.mtabs li a.active    {color: #fff;background: #222;}
